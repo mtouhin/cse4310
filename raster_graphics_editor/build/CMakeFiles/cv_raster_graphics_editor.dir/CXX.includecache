@@ -1,4 +1,4 @@
-#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+#IncludeRegexLine: ^[ 	]*#[ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
 
 #IncludeRegexScan: ^.*$
 
@@ -6,13 +6,13 @@
 
 #IncludeRegexTransform: 
 
-/Users/touhinmohammed/Desktop/cse4310_hw/raster_graphics_editor/cv_raster_graphics_editor.cpp
+/home/ubuntu/cse4310_hw/raster_graphics_editor/cv_raster_graphics_editor.cpp
 iostream
 -
 string
 -
 opencv2/opencv.hpp
-/Users/touhinmohammed/Desktop/cse4310_hw/raster_graphics_editor/opencv2/opencv.hpp
+/home/ubuntu/cse4310_hw/raster_graphics_editor/opencv2/opencv.hpp
 
 /usr/local/include/opencv/cxcore.h
 opencv2/core/core_c.h
@@ -1321,4 +1321,8 @@ opencv2/videostab/global_motion.hpp
 /usr/local/include/opencv2/videostab/opencv2/videostab/global_motion.hpp
 opencv2/videostab/log.hpp
 /usr/local/include/opencv2/videostab/opencv2/videostab/log.hpp
+
+/usr/local/include/opencv2/xfeatures2d/cuda.hpp
+opencv2/core/cuda.hpp
+/usr/local/include/opencv2/xfeatures2d/opencv2/core/cuda.hpp
 

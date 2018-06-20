@@ -13,7 +13,7 @@ cv::Point p1;
 cv::Point p2;
 cv::Mat imageIn;
 cv::Vec3b color (255,255,255);
-std::string inputFileName = "/Users/touhinmohammed/Desktop/cse4310_hw/raster_graphics_editor/test.png";
+std::string inputFileName = "/home/ubuntu/cse4310_hw/raster_graphics_editor/test2.jpg";
 static void crop(int event, int x, int y, int flags, void* userdata)
 {
     
@@ -23,7 +23,7 @@ static void crop(int event, int x, int y, int flags, void* userdata)
         p2.x = x;
         p2.y = y;
         cv:: Rect region(p1,p2);
-        cv::rectangle(imageIn,region,cv::Scalar(0,0,255),3);
+       // cv::rectangle(imageIn,region,cv::Scalar(0,0,255),3);
         imageIn = imageIn(region);
         cv::imshow("imageIn", imageIn);
     }
@@ -100,85 +100,43 @@ static void eyedrop(int event, int x, int y, int flags, void* userdata)
   
 }
 
-void check(cv::Vec3b color,cv::Vec3b pixel_color, int x, int y){
-    
+void check(cv::Vec3b pixel_color, int x, int y)
+{
+    pixel_color = imageIn.at<cv::Vec3b>(cv::Point(x,y));
     std::cout<<"in check"<<std::endl;
     std::cout<<"EYEDROP "<<color<<std::endl;
     std::cout<<"pixel color"<<pixel_color<<std::endl;
     
-    if( x >= imageIn.size().width){
+    if( x >= imageIn.size().width || x <0 || y < 0 || y >= imageIn.size().height)
+    {
         return;
     }
-    
-    if(y >= imageIn.size().height){
-        return;
-    }
-    
-    cv::Vec3b top = imageIn.at<cv::Vec3b>(cv::Point(x,y++));
-    cv::Vec3b bottom = imageIn.at<cv::Vec3b>(cv::Point(x,y--));
-    cv::Vec3b left = imageIn.at<cv::Vec3b>(cv::Point(x--,y));
-    cv::Vec3b right = imageIn.at<cv::Vec3b>(cv::Point(x++,y));
-    
-    
-    
-    if(top[0] != color[0] || top[1] != color[1] || top[2] != color[2]){
-        std::cout<<"top"<<std::endl;
-        check(color, top, x,y);
-        imageIn.at<cv::Vec3b>(cv::Point(x,y)) = color;
-        
-    }
-    
-    /*else{
-        std::cout<<"top pixel same"<<std::endl;
-        return;
-    }*/
-    
-    if(bottom[0] != color[0] || bottom[1] != color[1] || bottom[2] != color[2]){
-        std::cout<<"bottom"<<std::endl;
-        check(color, bottom, x,y);
-        imageIn.at<cv::Vec3b>(cv::Point(x,y)) = color;
-        
-    }
-    
-   /* else{
-         std::cout<<"bottom pixel same"<<std::endl;
-        return;
-    }*/
-    
-    if(left[0] != color[0] || left[1] != color[1] || left[2] != color[2]){
-        std::cout<<"left"<<std::endl;
-        check(color, left, x,y);
-        imageIn.at<cv::Vec3b>(cv::Point(x,y)) = color;
-    }
-    
-    /*else{
-         std::cout<<"left pixel same"<<std::endl;
-        return;
-    }*/
-    
-    if(right[0] != color[0] || right[1] != color[1] || right[2] != color[2]){
-        std::cout<<"right"<<std::endl;
-        check(color, right, x,y);
-        imageIn.at<cv::Vec3b>(cv::Point(x,y)) = color;
-        }
-    
-   /* else{
-         std::cout<<"right pixel same"<<std::endl;
-        return;
-    }*/
-    
-    
+
+    if(pixel_color[0] == color[0] && pixel_color[1] == color[1] && pixel_color[2] == color[2])
+     {
+       return ;
+     }
+
+	imageIn.at<cv::Vec3b>(cv::Point(x,y)) = color;
+        cv::imshow("imageIn",imageIn);	
+	
+        check(pixel_color, x+1, y);
+	check(pixel_color, x-1, y);
+	check(pixel_color, x, y+1);
+	check(pixel_color, x, y-1);
+     
+
  
 }
 static void paint_bucket(int event, int x, int y, int flags, void* userdata)
 {
     if(event == cv::EVENT_LBUTTONDOWN){
         std::cout<<"in paint bucket"<<std::endl;
+	std::cout<<x<<", "<<y<<std::endl;
         cv::Vec3b color2 = imageIn.at<cv::Vec3b>(cv::Point(x,y));
-        
-        check(color,color2,x,y);
+       
+        check(color2,x,y);
     }
-    
     
     if(event == cv::EVENT_RBUTTONDOWN)
     {
@@ -189,18 +147,15 @@ static void paint_bucket(int event, int x, int y, int flags, void* userdata)
 static void clickCallback(int event, int x, int y, int flags, void* userdata)
 {
     
-    if(event == cv::EVENT_LBUTTONDOWN)
+    if(event == cv::EVENT_LBUTTONDBLCLK)
     {
         std::cout << "Left DOUBLE CLICK (" << x << ", " << y << ")" << std::endl;
         imageIn = cv::imread(inputFileName, CV_LOAD_IMAGE_COLOR);
-       // color = (255,255,255);
         cv::imshow("imageIn",imageIn);
     }
 
      if(event == cv::EVENT_RBUTTONDOWN)
     {
-        //std::cout << "RIGHT CLICK (" << x << ", " << y << ")" << std::endl;
-        
             if(count == 0){
                 std::cout << "\nEYEDROPPER " << std::endl;
                  cv::setMouseCallback("imageIn", eyedrop, &imageIn);
